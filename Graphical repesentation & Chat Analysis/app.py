@@ -7,6 +7,8 @@ import pandas as pd
 import numpy as np
 import seaborn as sns
 import matplotlib.pyplot as plt
+import emoji
+
 
 # App title
 st.sidebar.title("Graphical Representation & Chat Analysis")
@@ -68,7 +70,7 @@ if uploaded_file is not None:
 
         # Stats Area
         num_messages, words, num_media_messages, num_links = helper.fetch_stats(selected_user,data)
-        st.title("Top Statistics")
+        st.title("Top Statistics:")
         col1, col2, col3, col4 = st.columns(4)
 
         with col1:
@@ -85,7 +87,7 @@ if uploaded_file is not None:
             st.title(num_links)
 
         # Monthly activity map
-        col1, col2, col3 = st.columns(3)
+        col1, col2, col3 = st.tabs(['Positive','Neutral', 'Negative'])
         with col1:
             st.markdown("<h3 style='text-align: center; color: white;'>Monthly Activity map(Positive)</h3>",unsafe_allow_html=True)
             
@@ -115,7 +117,7 @@ if uploaded_file is not None:
             st.pyplot(fig)
 
         # Daily activity map
-        col1, col2, col3 = st.columns(3)
+        col1, col2, col3 = st.tabs(['Positive','Neutral', 'Negative'])
         with col1:
             st.markdown("<h3 style='text-align: center; color: white;'>Daily Activity map(Positive)</h3>",unsafe_allow_html=True)
             
@@ -144,44 +146,44 @@ if uploaded_file is not None:
             plt.xticks(rotation='vertical')
             st.pyplot(fig)
 
-        # Weekly activity map
-        col1, col2, col3 = st.columns(3)
-        with col1:
-            try:
-                st.markdown("<h3 style='text-align: center; color: white;'>Weekly Activity Map(Positive)</h3>",unsafe_allow_html=True)
+        # # Weekly activity map
+        # col1, col2, col3 = st.tabs(['Positive','Neutral', 'Negative'])
+        # with col1:
+        #     try:
+        #         st.markdown("<h3 style='text-align: center; color: white;'>Weekly Activity Map(Positive)</h3>",unsafe_allow_html=True)
                 
-                user_heatmap = helper.activity_heatmap(selected_user, data, 1)
+        #         user_heatmap = helper.activity_heatmap(selected_user, data, 1)
                 
-                fig, ax = plt.subplots()
-                ax = sns.heatmap(user_heatmap)
-                st.pyplot(fig)
-            except:
-                st.image('error.webp')
-        with col2:
-            try:
-                st.markdown("<h3 style='text-align: center; color: white;'>Weekly Activity Map(Neutral)</h3>",unsafe_allow_html=True)
+        #         fig, ax = plt.subplots()
+        #         ax = sns.heatmap(user_heatmap)
+        #         st.pyplot(fig)
+        #     except:
+        #         st.image('error.webp')
+        # with col2:
+        #     try:
+        #         st.markdown("<h3 style='text-align: center; color: white;'>Weekly Activity Map(Neutral)</h3>",unsafe_allow_html=True)
                 
-                user_heatmap = helper.activity_heatmap(selected_user, data, 0)
+        #         user_heatmap = helper.activity_heatmap(selected_user, data, 0)
                 
-                fig, ax = plt.subplots()
-                ax = sns.heatmap(user_heatmap)
-                st.pyplot(fig)
-            except:
-                st.image('error.webp')
-        with col3:
-            try:
-                st.markdown("<h3 style='text-align: center; color: white;'>Weekly Activity Map(Negative)</h3>",unsafe_allow_html=True)
+        #         fig, ax = plt.subplots()
+        #         ax = sns.heatmap(user_heatmap)
+        #         st.pyplot(fig)
+        #     except:
+        #         st.image('error.webp')
+        # with col3:
+        #     try:
+        #         st.markdown("<h3 style='text-align: center; color: white;'>Weekly Activity Map(Negative)</h3>",unsafe_allow_html=True)
                 
-                user_heatmap = helper.activity_heatmap(selected_user, data, -1)
+        #         user_heatmap = helper.activity_heatmap(selected_user, data, -1)
                 
-                fig, ax = plt.subplots()
-                ax = sns.heatmap(user_heatmap)
-                st.pyplot(fig)
-            except:
-                st.image('error.webp')
+        #         fig, ax = plt.subplots()
+        #         ax = sns.heatmap(user_heatmap)
+        #         st.pyplot(fig)
+        #     except:
+        #         st.image('error.webp')
 
         # Daily timeline
-        col1, col2, col3 = st.columns(3)
+        col1, col2, col3 = st.tabs(['Positive','Neutral', 'Negative'])
         with col1:
             st.markdown("<h3 style='text-align: center; color: white;'>Daily Timeline(Positive)</h3>",unsafe_allow_html=True)
             
@@ -211,7 +213,7 @@ if uploaded_file is not None:
             st.pyplot(fig)
 
         # Monthly timeline
-        col1, col2, col3 = st.columns(3)
+        col1, col2, col3 = st.tabs(['Positive','Neutral', 'Negative'])
         with col1:
             st.markdown("<h3 style='text-align: center; color: white;'>Monthly Timeline(Positive)</h3>",unsafe_allow_html=True)
             
@@ -242,7 +244,7 @@ if uploaded_file is not None:
 
         # Percentage contributed
         if selected_user == 'Overall':
-            col1,col2,col3 = st.columns(3)
+            col1,col2,col3 = st.tabs(['Positive','Neutral', 'Negative'])
             with col1:
                 st.markdown("<h3 style='text-align: center; color: white;'>Most Positive Contribution</h3>",unsafe_allow_html=True)
                 x = helper.percentage(data, 1)
@@ -271,7 +273,7 @@ if uploaded_file is not None:
             y = data['user'][data['value'] == -1].value_counts().head(10)
             z = data['user'][data['value'] == 0].value_counts().head(10)
 
-            col1,col2,col3 = st.columns(3)
+            col1,col2,col3 = st.tabs(['Positive','Neutral', 'Negative'])
             with col1:
                 # heading
                 st.markdown("<h3 style='text-align: center; color: white;'>Most Positive Users</h3>",unsafe_allow_html=True)
@@ -301,7 +303,7 @@ if uploaded_file is not None:
                 st.pyplot(fig)
 
         # WORDCLOUD......
-        col1,col2,col3 = st.columns(3)
+        col1,col2,col3 = st.tabs(['Positive','Neutral', 'Negative'])
         with col1:
             try:
                 # heading
@@ -343,7 +345,7 @@ if uploaded_file is not None:
                 st.image('error.webp')
 
         # Most common positive words
-        col1, col2, col3 = st.columns(3)
+        col1, col2, col3 = st.tabs(['Positive','Neutral', 'Negative'])
         with col1:
             try:
                 # Data frame of most common positive words.
@@ -386,6 +388,20 @@ if uploaded_file is not None:
             except:
                 # Disply error image
                 st.image('error.webp')
+                # Emoji Analysis
+    
+        st.title(":blue[Emoji Analysis]")
+        emoji_df = helper.emoji_helper(selected_user,data)
+        if emoji_df.shape[0] > 0:
+            col1,col2 = st.tabs(["Number of Emoji","Pie Chart"])
+            with col1:
+                st.dataframe(emoji_df)
+            with col2:
+                fig,ax = plt.subplots()
+                ax.pie(emoji_df[1].head(),labels=emoji_df[0].head(),autopct="%0.2f")
+                st.pyplot(fig)
+        else:
+            st.write(":red[No Emojis Send by this user]")
 
 
 

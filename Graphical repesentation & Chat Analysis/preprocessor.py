@@ -146,15 +146,37 @@ def preprocess(data):
    
 
 
+    # period = []
+    # for hour in df[['day_name', 'hour']]['hour']:
+    #     if hour == 23:
+    #         period.append(str(hour) + "-" + str('00'))
+    #     elif hour == 0:
+    #         period.append(str('00') + "-" + str(hour + 1))
+    #     else:
+    #         period.append(str(hour) + "-" + str(hour + 1))
+
+    # df['period'] = period
+
+    # return df
+    
     period = []
     for hour in df[['day_name', 'hour']]['hour']:
-        if hour == 23:
-            period.append(str(hour) + "-" + str('00'))
+        if hour == 11:
+            period.append(str(hour) + " AM" + "-" + str('12 PM'))
+        elif hour == 12:
+            period.append(str('12 PM') + "-" + str('1 PM'))
+        elif hour == 23:
+            period.append(str('11 PM') + "-" + str('12 AM'))
         elif hour == 0:
-            period.append(str('00') + "-" + str(hour + 1))
+            period.append(str('12 AM') + "-" + str('1 AM'))
+        elif hour < 11:
+            period.append(str(hour) + " AM" + "-" + str(hour + 1) + " AM")
+        elif hour > 12:
+            period.append(str(hour - 12) + " PM" + "-" + str(hour - 11) + " PM")
         else:
-            period.append(str(hour) + "-" + str(hour + 1))
+            period.append(str(hour) + " PM" + "-" + str(hour + 1) + " PM")
 
     df['period'] = period
 
     return df
+

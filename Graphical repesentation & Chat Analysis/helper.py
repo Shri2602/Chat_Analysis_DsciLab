@@ -4,6 +4,7 @@ from urlextract import URLExtract
 from wordcloud import WordCloud
 import pandas as pd
 from collections import Counter
+import emoji
 
 # Object
 extract = URLExtract()
@@ -57,8 +58,38 @@ def activity_heatmap(selected_user,df,k):
         df = df[df['user'] == selected_user]
     df = df[df['value'] == k]
     
+    period = []
+    for hour in df['hour']:
+        if hour == 11:
+            period.append(str(hour) + " AM" + "-" + str('12 PM'))
+        elif hour == 12:
+            period.append(str('12 PM') + "-" + str('1 PM'))
+        elif hour == 23:
+            period.append(str('11 PM') + "-" + str('12 AM'))
+        elif hour == 0:
+            period.append(str('12 AM') + "-" + str('1 AM'))
+        elif hour < 11:
+            period.append(str(hour) + " AM" + "-" + str(hour + 1) + " AM")
+        elif hour > 12:
+            period.append(str(hour - 12) + " PM" + "-" + str(hour - 11) + " PM")
+        else:
+            period.append(str(hour) + " PM" + "-" + str(hour + 1) + " PM")
+    
+    df['period'] = period
+
+    # Set the order of periods explicitly
+    period_order = [
+        '12 AM-1 AM', '1 AM-2 AM', '2 AM-3 AM', '3 AM-4 AM',
+        '4 AM-5 AM', '5 AM-6 AM', '6 AM-7 AM', '7 AM-8 AM',
+        '8 AM-9 AM', '9 AM-10 AM', '10 AM-11 AM', '11 AM-12 PM',
+        '12 PM-1 PM', '1 PM-2 PM', '2 PM-3 PM', '3 PM-4 PM',
+        '4 PM-5 PM', '5 PM-6 PM', '6 PM-7 PM', '7 PM-8 PM',
+        '8 PM-9 PM', '9 PM-10 PM', '10 PM-11 PM', '11 PM-12 AM'
+    ]
+
     # Creating heat map
-    user_heatmap = df.pivot_table(index='day_name', columns='period', values='message', aggfunc='count').fillna(0)
+    user_heatmap = df.pivot_table(index='day_name', columns='period', values='message', aggfunc='count', fill_value=0)
+    user_heatmap = user_heatmap.reindex(columns=period_order)
     return user_heatmap
 
 
@@ -136,3 +167,15 @@ def most_common_words(selected_user,df,k):
     # Creating data frame of most common 20 entries
     most_common_df = pd.DataFrame(Counter(words).most_common(20))
     return most_common_df
+
+def emoji_helper(selected_user, df):
+    if selected_user != 'Overall':
+        df = df[df['user'] == selected_user]
+
+    emojis = []
+    for message in df['message']:
+        emojis.extend([c for c in message if c in emoji.EMOJI_DATA])
+
+    emoji_df = pd.DataFrame(Counter(emojis).most_common(len(Counter(emojis))))
+    return emoji_df
+
